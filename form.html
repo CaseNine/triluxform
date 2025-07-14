@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Lichtlijn Configurator</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+</head>
+<body class="bg-gray-100 p-6">
+<div class="max-w-4xl mx-auto bg-white shadow-xl rounded-xl p-8 space-y-6">
+
+    <h2 class="text-3xl font-bold text-gray-700">Lichtlijn Configurator</h2>
+
+    <form id="lichtlijnForm" class="space-y-6">
+
+        <!-- Nieuwbouw of Renovatie -->
+        <div>
+            <label class="block text-gray-600 font-medium mb-1">Nieuwbouw of Renovatie</label>
+            <select id="bouwType" name="bouwType" class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-400">
+                <option value="">Kies een optie</option>
+                <option value="nieuwbouw">Nieuwbouw (2250 mm)</option>
+                <option value="renovatie">Renovatie (1500 mm)</option>
+            </select>
+        </div>
+
+        <!-- Montagehoogte -->
+        <div>
+            <label class="block text-gray-600 font-medium mb-1">Montagehoogte</label>
+            <select id="montageHoogte" name="montageHoogte" class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-400">
+                <option value="">Kies hoogte</option>
+                <option>2-3 meter</option>
+                <option>3-5 meter</option>
+                <option>5-8 meter</option>
+                <option>8+ meter</option>
+            </select>
+        </div>
+
+        <!-- Lengte lichtlijn -->
+        <div>
+            <label class="block text-gray-600 font-medium mb-1">Lengte lichtlijn (meter)</label>
+            <input id="lengteLijn" name="lengteLijn" type="number" min="1" class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-400" placeholder="Bijv. 12" />
+            <p id="berekeningResultaat" class="mt-2 text-sm text-gray-500 hidden"></p>
+        </div>
+
+        <!-- Lichtkleur -->
+        <div>
+            <label class="block text-gray-600 font-medium mb-1">Lichtkleur</label>
+            <select id="lichtkleur" name="lichtkleur" class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-400">
+                <option value="">Kies een kleur</option>
+                <option>3000K</option>
+                <option>4000K</option>
+            </select>
+        </div>
+
+        <!-- Lichtsturing -->
+        <div>
+            <label class="block text-gray-600 font-medium mb-1">Lichtsturing</label>
+            <select id="lichtsturing" name="lichtsturing" class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-400">
+                <option value="">Maak een keuze</option>
+                <option>Nee</option>
+                <option>Bedraad DALI</option>
+                <option>Draadloos</option>
+            </select>
+        </div>
+
+        <!-- Bedrading -->
+        <div>
+            <label class="block text-gray-600 font-medium mb-1">Bedrading</label>
+            <select id="bedrading" name="bedrading" class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-400">
+                <option value="">Kies bedrading</option>
+                <option>7lv</option>
+                <option>7 + 7lv</option>
+            </select>
+        </div>
+
+        <!-- Indeling lichtlijn -->
+        <div>
+            <label class="block text-gray-600 font-medium mb-2">Indeling lichtlijn</label>
+            <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
+                <label class="relative cursor-pointer border rounded-lg p-2 hover:shadow-lg transition" title="Volledige lijn">
+                    <input type="radio" name="indeling" value="Volledige lijn" class="sr-only" />
+                    <img src="https://placehold.co/150x60?text=Volledige+lijn" alt="Volledige lijn" class="rounded" />
+                </label>
+                <label class="relative cursor-pointer border rounded-lg p-2 hover:shadow-lg transition" title="1 armatuur, 1 blind">
+                    <input type="radio" name="indeling" value="1 armatuur, 1 blind" class="sr-only" />
+                    <img src="https://placehold.co/150x60?text=1+armatuur+1+blind" alt="1 armatuur, 1 blind" class="rounded" />
+                </label>
+                <label class="relative cursor-pointer border rounded-lg p-2 hover:shadow-lg transition" title="2 armaturen, 1 blind">
+                    <input type="radio" name="indeling" value="2 armaturen, 1 blind" class="sr-only" />
+                    <img src="https://placehold.co/150x60?text=2+armaturen+1+blind" alt="2 armaturen, 1 blind" class="rounded" />
+                </label>
+            </div>
+        </div>
+
+        <!-- Montage -->
+        <div>
+            <label class="block text-gray-600 font-medium mb-1">Montage</label>
+            <select id="montage" name="montage" class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-400">
+                <option value="">Kies montagewijze</option>
+                <option>Geen (zonder montagemiddelen)</option>
+                <option>Opbouw</option>
+                <option>Gependeld</option>
+            </select>
+        </div>
+
+        <!-- Resultatenoverzicht -->
+        <div class="bg-gray-50 p-4 rounded-xl">
+            <h3 class="text-xl font-semibold mb-2">Jouw selectie</h3>
+            <ul id="summary" class="text-gray-700 space-y-1">
+                <li><strong>Bouwtype:</strong> <span id="sumBouw"></span></li>
+                <li><strong>Montagehoogte:</strong> <span id="sumHoogte"></span></li>
+                <li><strong>Lengte:</strong> <span id="sumLengte"></span></li>
+                <li><strong>Lichtkleur:</strong> <span id="sumKleur"></span></li>
+                <li><strong>Lichtsturing:</strong> <span id="sumSturing"></span></li>
+                <li><strong>Bedrading:</strong> <span id="sumBedrading"></span></li>
+                <li><strong>Indeling:</strong> <span id="sumIndeling"></span></li>
+                <li><strong>Montage:</strong> <span id="sumMontage"></span></li>
+            </ul>
+        </div>
+
+        <!-- Submit en Export -->
+        <div class="flex flex-col md:flex-row gap-4 pt-4">
+            <button type="button" id="exportPdf" class="flex-1 bg-gray-600 hover:bg-gray-700 text-white py-3 rounded-lg font-semibold transition-all shadow-md">
+                Download PDF
+            </button>
+            <button type="submit" class="flex-1 bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-lg font-semibold transition-all shadow-md">
+                Verstuur per e-mail
+            </button>
+        </div>
+
+    </form>
+</div>
+
+<script>
+    const form = document.getElementById('lichtlijnForm');
+    const summary = {
+        bouwType: document.getElementById('sumBouw'),
+        montageHoogte: document.getElementById('sumHoogte'),
+        lengte: document.getElementById('sumLengte'),
+        lichtkleur: document.getElementById('sumKleur'),
+        lichtsturing: document.getElementById('sumSturing'),
+        bedrading: document.getElementById('sumBedrading'),
+        indeling: document.getElementById('sumIndeling'),
+        montage: document.getElementById('sumMontage')
+    };
+
+    function updateSummary() {
+        summary.bouwType.textContent = form.bouwType.value;
+        summary.montageHoogte.textContent = form.montageHoogte.value;
+        summary.lengte.textContent = form.lengteLijn.value + ' meter';
+        summary.lichtkleur.textContent = form.lichtkleur.value;
+        summary.lichtsturing.textContent = form.lichtsturing.value;
+        summary.bedrading.textContent = form.bedrading.value;
+        summary.indeling.textContent = form.indeling.value;
+        summary.montage.textContent = form.montage.value;
+    }
+
+    form.addEventListener('input', updateSummary);
+    form.addEventListener('change', updateSummary);
+    updateSummary();
+
+    // Module berekening
+    const bouwType = form.bouwType;
+    const lengteLijn = form.lengteLijn;
+    const berekeningResultaat = document.getElementById("berekeningResultaat");
+
+    function updateLichtlijnLengte() {
+        const lengte = parseFloat(lengteLijn.value);
+        const type = bouwType.value;
+
+        if (!lengte || !type) {
+            berekeningResultaat.classList.add("hidden");
+            return;
+        }
+
+        const moduleLengte = type === "nieuwbouw" ? 2.25 : 1.5;
+        const modules = Math.ceil(lengte / moduleLengte);
+        berekeningResultaat.textContent = `Aantal armaturen (${moduleLengte}m): ${modules}`;
+        berekeningResultaat.classList.remove("hidden");
+    }
+
+    bouwType.addEventListener("change", updateLichtlijnLengte);
+    lengteLijn.addEventListener("input", updateLichtlijnLengte);
+
+    // PDF Export
+    document.getElementById("exportPdf").addEventListener("click", () => {
+        const { jsPDF } = window.jspdf;
+        const doc = new jsPDF();
+        doc.text("Lichtlijn Configuratie", 10, 10);
+        let y = 20;
+        Object.entries(summary).forEach(([key, el]) => {
+            doc.text(`${el.previousElementSibling.textContent}: ${el.textContent}`, 10, y);
+            y += 10;
+        });
+        doc.save("lichtlijn_configuratie.pdf");
+    });
+
+    // E-mail submission (placeholder logic)
+    form.addEventListener("submit", e => {
+        e.preventDefault();
+        alert("E-mail verzonden! (Not really implement email logic)");
+    });
+</script>
+</body>
+</html>
