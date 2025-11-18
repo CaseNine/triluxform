@@ -1,0 +1,19 @@
+/*
+Source - https://stackoverflow.com/a
+Posted by baao
+Retrieved 2025-11-18, License - CC BY-SA 4.0
+*/
+
+#btn-group {
+  /*display: flex;*/
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+#btn-group>button {
+  margin: 2px;
+}
+
+.my-font {
+  font-family: monospace;
+}
