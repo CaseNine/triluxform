@@ -1,0 +1,681 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Lichtlijn Configurator — Demo</title>
+<style>
+  :root{
+    --bg:#f3f4f6;
+    --card:#ffffff;
+    --muted:#9aa1a7;
+    --accent:#d90404;
+    --border:#e6e6e6;
+    --shadow: 0 6px 20px rgba(0,0,0,0.06);
+    --radius:10px;
+    --gap:18px;
+    font-family: Inter, "Segoe UI", Roboto, Arial, sans-serif;
+  }
+  html,body{height:100%; margin:0; background:var(--bg); color:#111}
+  .app{
+    max-width:1200px;
+    margin:28px auto;
+    padding:20px;
+  }
+
+  header{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:20px;
+    margin-bottom:18px;
+  }
+  h1{font-size:20px;margin:0}
+  .sub{ color:var(--muted); font-size:13px }
+
+  .layout{
+    display:grid;
+    grid-template-columns: 1fr 360px;
+    gap:20px;
+    align-items:start;
+  }
+
+  .panel{
+    background:var(--card);
+    border-radius:var(--radius);
+    box-shadow:var(--shadow);
+    padding:18px;
+    border:1px solid var(--border);
+  }
+
+  /* Config list + template blocks */
+  #configs { display:flex; flex-direction:column; gap:14px }
+  .config-block{
+    border-radius:8px;
+    border:1px solid #ececec;
+    padding:14px;
+    background:#fbfbfb;
+  }
+  .config-head{
+    display:flex;
+    justify-content:space-between;
+    gap:10px;
+    align-items:center;
+    cursor:pointer;
+  }
+  .config-title{
+    display:flex;
+    gap:12px;
+    align-items:center;
+  }
+  .proj-name {
+    font-weight:600;
+  }
+  .muted{ color:var(--muted); font-size:13px }
+
+  .controls{ margin-top:12px; display:grid; grid-template-columns:repeat(2,1fr); gap:12px }
+
+  label{ display:block; font-size:13px; color:#333; margin-bottom:6px }
+  input[type="text"], input[type="number"], select, textarea{
+    width:100%; padding:8px 10px; border-radius:6px; border:1px solid #d8d8d8; font-size:14px;
+  }
+  .row{ display:flex; gap:12px }
+  .col{ flex:1 }
+
+  /* thumbnails / options */
+  .thumb-row{
+    display:flex;
+    gap:10px;
+    margin-top:8px;
+  }
+  .thumb{
+    width:96px;
+    height:56px;
+    border-radius:8px;
+    border:2px solid transparent;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    cursor:pointer;
+    box-shadow:0 2px 8px rgba(0,0,0,0.04);
+  }
+  .thumb.selected{ border-color:var(--accent) }
+
+  /* optics diagrams */
+  .optics { display:flex; gap:12px; margin-top:8px; }
+  .optbox{ width:150px; padding:8px; border-radius:8px; border:1px dashed #eee; text-align:center; font-size:13px }
+
+  .small{ font-size:13px; color:var(--muted) }
+
+  .actions{
+    display:flex;
+    gap:8px;
+    justify-content:flex-end;
+    margin-top:12px;
+  }
+  .btn{
+    background:#111; color:#fff; padding:9px 14px; border-radius:8px; border:none; cursor:pointer;
+  }
+  .btn.ghost{ background:transparent; color:#111; border:1px solid #ddd; }
+  .btn.red{ background:var(--accent) }
+
+  /* summary */
+  .summary-list{ list-style:none; padding:0; margin:0; font-size:14px }
+  .summary-item{ padding:10px; border-bottom:1px solid #f1f1f1; display:flex; align-items:center; gap:10px; justify-content:space-between }
+  .summary-item .meta{ color:var(--muted); font-size:13px }
+
+  /* finish page */
+  #finish-page{ display:none; padding:18px }
+
+  /* collapsible content */
+  .content{ margin-top:10px; display:block; transition:all .15s ease; }
+  .collapsed .content{ display:none }
+
+  /* helper */
+  .muted-block{ color:var(--muted); font-size:13px; padding:10px 12px; border-radius:6px; background:#fff; border:1px solid #f2f2f2; }
+
+  footer{ margin-top:18px; display:flex; justify-content:space-between; gap:10px; align-items:center }
+  .notice{ color:var(--muted); font-size:13px }
+  .tag{ font-size:12px; padding:6px 8px; border-radius:7px; background:#f7f7f7; border:1px solid #eee; }
+
+  @media (max-width:1000px){
+    .layout{ grid-template-columns: 1fr }
+    .summary { order: 2; margin-top:12px }
+  }
+</style>
+</head>
+<body>
+<div class="app">
+  <header>
+    <div>
+      <h1>Lichtlijn configurator</h1>
+      <div class="sub">Maak configuraties en rond je project af</div>
+    </div>
+    <div>
+      <button id="to-finish" class="btn ghost">Ga naar afronden</button>
+    </div>
+  </header>
+
+  <div class="layout">
+    <!-- LEFT: main configurator -->
+    <div class="panel">
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px">
+        <input id="projectName" type="text" placeholder="NAAM VAN PROJECT" style="font-weight:700; font-size:16px; padding:10px 12px; border-radius:8px; border:1px solid #ddd" value="Project — Meeting Room 01">
+        <span class="tag">Concept</span>
+      </div>
+
+      <div id="configs">
+        <!-- dynamic config blocks inserted here -->
+      </div>
+
+      <div style="display:flex; gap:10px; margin-top:8px">
+        <button id="addConfig" class="btn">+ Nieuwe configuratie</button>
+        <button id="addFromTemplate" class="btn ghost">Kopieer configuratie</button>
+      </div>
+
+      <footer>
+        <div class="notice">Elke configuratie wordt opgeslagen in <code>configurations[INDEX][field]</code></div>
+        <div><button id="previewJSON" class="btn">Preview JSON</button></div>
+      </footer>
+    </div>
+
+    <!-- RIGHT: summary -->
+    <aside class="panel summary">
+      <h3>Samenvatting</h3>
+      <ul id="summaryList" class="summary-list"></ul>
+      <div style="margin-top:12px; display:flex; gap:8px; justify-content:flex-end">
+        <button id="clearAll" class="btn ghost">Leegmaken</button>
+        <button id="finish" class="btn red">Project afronden</button>
+      </div>
+    </aside>
+  </div>
+
+  <!-- Finish page (hidden, toggled) -->
+  <div id="finish-page" class="panel" style="margin-top:18px">
+    <button id="back-to-config" class="btn ghost">← Terug naar configurator</button>
+    <h2 style="margin-top:12px">PROJECT AFRONDEN</h2>
+    <p class="small">Vul je Samenvatting in zodat wij het project kunnen ontvangen.</p>
+
+    <form id="finishForm" style="margin-top:12px; display:grid; gap:12px; max-width:700px">
+      <div class="row">
+        <div class="col">
+          <label>Bedrijf</label>
+          <input name="company" required placeholder="Bijv. Business Creative">
+        </div>
+        <div class="col">
+          <label>Aanhef</label>
+          <select name="salutation">
+            <option>Mevrouw</option>
+            <option>De heer</option>
+            <option>Bedrijf</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col">
+          <label>Voornaam</label>
+          <input name="first" required>
+        </div>
+        <div class="col">
+          <label>Achternaam</label>
+          <input name="last" required>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col">
+          <label>E-mailadres</label>
+          <input type="email" name="email" required placeholder="naam@voorbeeld.nl">
+        </div>
+        <div class="col">
+          <label>Telefoonnummer</label>
+          <input name="phone">
+        </div>
+      </div>
+
+      <label>Opmerkingen</label>
+      <textarea name="notes" rows="4" placeholder="Eventuele opmerkingen..."></textarea>
+
+      <div style="display:flex; gap:10px; justify-content:flex-end">
+        <button type="button" id="sendProject" class="btn red">Configuratie afronden</button>
+      </div>
+    </form>
+  </div>
+
+  <!-- Hidden template -->
+  <template id="config-template">
+    <div class="config-block" data-block>
+      <div class="config-head">
+        <div class="config-title">
+          <svg width="18" height="18" viewBox="0 0 24 24" style="opacity:.7"><path fill="currentColor" d="M3 12h18v2H3zM3 6h18v2H3zM3 18h18v2H3z"/></svg>
+          <div>
+            <div class="proj-name">Configuratie <span class="cfg-num">1</span></div>
+            <div class="muted small">Ruimte: <span class="cfg-room">Onbenoemd</span> · <span class="cfg-length">0m</span></div>
+          </div>
+        </div>
+        <div style="display:flex; gap:8px; align-items:center">
+          <button type="button" class="btn ghost toggle-collapse">Inklappen</button>
+          <button type="button" class="btn" data-action="duplicate">Kopieer</button>
+          <button type="button" class="btn ghost" data-action="remove">Verwijderen</button>
+        </div>
+      </div>
+
+      <div class="content">
+        <div style="margin-top:12px">
+          <label>Naam van ruimte</label>
+          <input type="text" name="room_name" placeholder="Bijv. Kantoor Tuin">
+        </div>
+
+        <div class="controls" style="margin-top:10px">
+          <div>
+            <label>Lengte (m)</label>
+            <input type="number" step="0.01" name="length" placeholder="12.50">
+          </div>
+          <div>
+            <label>Module lengte</label>
+            <select name="module_length">
+              <option value="2.25">2.25 m</option>
+              <option value="3.0">3.00 m</option>
+              <option value="4.0">4.00 m</option>
+            </select>
+          </div>
+        </div>
+
+        <div style="margin-top:12px">
+          <label>Montage / Luchtspiegel</label>
+          <div class="row">
+            <div class="col">
+              <select name="mounting_type">
+                <option value="inbouw">Inbouw</option>
+                <option value="opbouw">Opbouw</option>
+                <option value="pendel">Pendel</option>
+              </select>
+            </div>
+            <div class="col">
+              <label class="small muted">Montage hoogte (mm)</label>
+              <input type="number" name="mount_height" placeholder="H (mm)">
+            </div>
+          </div>
+        </div>
+
+        <div style="margin-top:12px">
+          <label>Lichtkleur</label>
+          <div class="thumb-row">
+            <div class="thumb" data-field="color" data-value="3000K" title="3000K" role="button" tabindex="0">
+              <!-- warm -->
+              <svg width="60" height="28" viewBox="0 0 120 56" xmlns="http://www.w3.org/2000/svg">
+                <rect rx="8" width="120" height="56" fill="#fff7e6"/>
+                <ellipse cx="60" cy="28" rx="38" ry="16" fill="#ffd89b" opacity="0.95"/>
+              </svg>
+              <div style="position:absolute;transform:translateY(22px);font-size:12px;color:#333">3000K</div>
+            </div>
+
+            <div class="thumb" data-field="color" data-value="4000K" title="4000K" role="button" tabindex="0">
+              <svg width="60" height="28" viewBox="0 0 120 56">
+                <rect rx="8" width="120" height="56" fill="#f3f6ff"/>
+                <ellipse cx="60" cy="28" rx="36" ry="14" fill="#dbe9ff" />
+              </svg>
+              <div style="position:absolute;transform:translateY(22px);font-size:12px;color:#333">4000K</div>
+            </div>
+
+            <div class="thumb" data-field="color" data-value="6500K" title="6500K" role="button" tabindex="0">
+              <svg width="60" height="28" viewBox="0 0 120 56">
+                <rect rx="8" width="120" height="56" fill="#eaffff"/>
+                <ellipse cx="60" cy="28" rx="34" ry="12" fill="#bfefff" />
+              </svg>
+              <div style="position:absolute;transform:translateY(22px);font-size:12px;color:#333">6500K</div>
+            </div>
+          </div>
+        </div>
+
+        <div style="margin-top:12px">
+          <label>Optiek</label>
+          <div class="optics">
+            <div class="optbox" data-field="optic" data-value="wide">Wide 60°<div class="small muted">geschikt voor open ruimtes</div></div>
+            <div class="optbox" data-field="optic" data-value="narrow">Narrow 24°<div class="small muted">gefokusseerde baan</div></div>
+            <div class="optbox" data-field="optic" data-value="asym">Asymmetrisch<div class="small muted">wand & paden</div></div>
+          </div>
+        </div>
+
+        <div style="margin-top:12px">
+          <label>Dimbaar</label>
+          <div style="display:flex; gap:12px; align-items:center">
+            <label style="display:flex;align-items:center;gap:8px"><input type="radio" name="dimmable" value="yes"> Ja</label>
+            <label style="display:flex;align-items:center;gap:8px"><input type="radio" name="dimmable" value="no" checked> Nee</label>
+            <div class="muted small">Dimbaarheid kan invloed hebben op driver keuze</div>
+          </div>
+        </div>
+
+        <div style="margin-top:12px">
+          <label>Inleg / opbouw</label>
+          <div class="row">
+            <div class="col">
+              <label class="small">Inleg type</label>
+              <select name="inset_type">
+                <option value="inleg">Inleg</option>
+                <option value="opbouw">Opbouw</option>
+              </select>
+            </div>
+            <div class="col">
+              <label class="small">Extra montage</label>
+              <select name="extra_mount">
+                <option value="none">Geen</option>
+                <option value="suspension">Suspension kit</option>
+                <option value="custom">Custom</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <div class="actions">
+          <div class="muted small" style="align-self:center">Gedrag: kies opties en klik 'Opslaan' of 'Kopieer'</div>
+          <button class="btn ghost" type="button" data-action="save">Opslaan</button>
+        </div>
+      </div>
+    </div>
+  </template>
+
+  <!-- JSON preview modal (simple) -->
+  <div id="jsonModal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.4); align-items:center; justify-content:center;">
+    <div style="background:#fff; max-width:900px; width:95%; padding:18px; border-radius:10px; max-height:80vh; overflow:auto">
+      <h3>Configuraties (JSON)</h3>
+      <pre id="jsonContent" style="white-space:pre-wrap; word-break:break-word;"></pre>
+      <div style="display:flex; justify-content:flex-end; gap:8px; margin-top:12px">
+        <button id="closeJson" class="btn ghost">Sluiten</button>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+/*
+  Detailed behavior:
+  - Each cloned block has its form field names rewritten to configurations[IDX][field]
+  - Thumbnails and optboxes set values by toggling 'selected' class and internal hidden input state
+  - Summary updates live
+  - Buttons: add, duplicate, remove, collapse, copy config, preview JSON, finish/submit
+*/
+
+const configsContainer = document.getElementById('configs');
+const template = document.getElementById('config-template');
+const addBtn = document.getElementById('addConfig');
+const addCopyBtn = document.getElementById('addFromTemplate');
+const summaryList = document.getElementById('summaryList');
+const previewJSON = document.getElementById('previewJSON');
+const jsonModal = document.getElementById('jsonModal');
+const jsonContent = document.getElementById('jsonContent');
+const closeJson = document.getElementById('closeJson');
+const clearAll = document.getElementById('clearAll');
+const finishButtons = [document.getElementById('finish'), document.getElementById('to-finish')];
+const finishPage = document.getElementById('finish-page');
+const backTo = document.getElementById('back-to-config');
+const sendProject = document.getElementById('sendProject');
+const projectName = document.getElementById('projectName');
+
+let idxCounter = 0;
+
+// helper to serialize configs to JS objects
+function collectConfigs(){
+  const blocks = configsContainer.querySelectorAll('[data-block]');
+  const arr = [];
+  blocks.forEach((b, i) => {
+    const obj = {};
+    // fields: room_name, length, module_length, mounting_type, mount_height,
+    // color, optic, dimmable, inset_type, extra_mount
+    obj.room_name = b.querySelector('[name$="[room_name]"]')?.value || '';
+    obj.length = parseFloat(b.querySelector('[name$="[length]"]')?.value || 0);
+    obj.module_length = b.querySelector('[name$="[module_length]"]')?.value || '';
+    obj.mounting_type = b.querySelector('[name$="[mounting_type]"]')?.value || '';
+    obj.mount_height = b.querySelector('[name$="[mount_height]"]')?.value || '';
+    // color selection
+    const thumb = b.querySelector('.thumb.selected');
+    obj.color = thumb ? thumb.getAttribute('data-value') : '';
+    // optic
+    const opt = b.querySelector('.optbox.selected');
+    obj.optic = opt ? opt.getAttribute('data-value') : '';
+    // dimmable
+    const dim = b.querySelector('[name$="[dimmable]"]:checked');
+    obj.dimmable = dim ? dim.value : 'no';
+    obj.inset_type = b.querySelector('[name$="[inset_type]"]')?.value || '';
+    obj.extra_mount = b.querySelector('[name$="[extra_mount]"]')?.value || '';
+    arr.push(obj);
+  });
+  return arr;
+}
+
+// update summary list DOM
+function updateSummary(){
+  const arr = collectConfigs();
+  summaryList.innerHTML = '';
+  arr.forEach((c, i) => {
+    const li = document.createElement('li');
+    li.className = 'summary-item';
+    li.innerHTML = `<div><strong>${i+1}. ${c.room_name || 'Onbenoemd'}</strong><div class="meta">${c.length || 0} m · ${c.color || ''} · ${c.optic || ''}</div></div>
+                    <div class="meta">${c.dimmable === 'yes' ? 'Dimbaar' : ''}</div>`;
+    summaryList.appendChild(li);
+  });
+}
+
+// clone template and wire up
+function createConfig(initial = {}) {
+  const node = template.content.cloneNode(true);
+  const el = node.querySelector('[data-block]');
+
+  const idx = idxCounter++;
+  // rewrite names to array style
+  el.querySelectorAll('[name]').forEach(inp => {
+    const name = inp.getAttribute('name');
+    inp.setAttribute('name', `configurations[${idx}][${name}]`);
+  });
+
+  // set displayed numbers and initial values
+  el.querySelector('.cfg-num').textContent = idx + 1;
+  const roomSpan = el.querySelector('.cfg-room');
+  const lengthSpan = el.querySelector('.cfg-length');
+
+  // attach event listeners
+  const content = el.querySelector('.content');
+  const toggle = el.querySelector('.toggle-collapse');
+  const removeBtn = el.querySelector('[data-action="remove"]');
+  const duplicateBtn = el.querySelector('[data-action="duplicate"]');
+  const saveBtn = el.querySelector('[data-action="save"]');
+
+  toggle.addEventListener('click', () => {
+    el.classList.toggle('collapsed');
+    toggle.textContent = el.classList.contains('collapsed') ? 'Uitklappen' : 'Inklappen';
+  });
+
+  removeBtn.addEventListener('click', () => {
+    el.remove();
+    updateIndexes();
+    updateSummary();
+  });
+
+  duplicateBtn.addEventListener('click', () => {
+    // we clone the data from this el
+    const data = {
+      room_name: el.querySelector('[name$="[room_name]"]').value,
+      length: el.querySelector('[name$="[length]"]').value,
+      module_length: el.querySelector('[name$="[module_length]"]').value,
+      mounting_type: el.querySelector('[name$="[mounting_type]"]').value,
+      mount_height: el.querySelector('[name$="[mount_height]"]').value,
+      color: (el.querySelector('.thumb.selected')?.getAttribute('data-value')) || '',
+      optic: (el.querySelector('.optbox.selected')?.getAttribute('data-value')) || '',
+      dimmable: el.querySelector('[name$="[dimmable]"]:checked')?.value || 'no',
+      inset_type: el.querySelector('[name$="[inset_type]"]').value,
+      extra_mount: el.querySelector('[name$="[extra_mount]"]').value
+    };
+    const newEl = createConfig(data);
+    // expand to show
+    newEl.classList.remove('collapsed');
+    updateSummary();
+  });
+
+  saveBtn.addEventListener('click', () => {
+    el.classList.add('collapsed');
+    toggle.textContent = 'Uitklappen';
+    updateSummary();
+  });
+
+  // throttle summary update on input changes
+  el.querySelectorAll('input, select, textarea').forEach(inp => {
+    inp.addEventListener('input', () => {
+      roomSpan.textContent = el.querySelector('[name$="[room_name]"]').value || 'Onbenoemd';
+      lengthSpan.textContent = (el.querySelector('[name$="[length]"]').value || 0) + ' m';
+      updateSummary();
+    });
+  });
+
+  // thumb color selection
+  el.querySelectorAll('.thumb').forEach(t => {
+    t.addEventListener('click', (ev) => {
+      el.querySelectorAll('.thumb').forEach(x => x.classList.remove('selected'));
+      t.classList.add('selected');
+      updateSummary();
+    });
+    t.addEventListener('keydown', (ev) => { if(ev.key === 'Enter') t.click(); });
+    if(initial.color && t.getAttribute('data-value') === initial.color){
+      t.classList.add('selected');
+    }
+  });
+
+  // optics
+  el.querySelectorAll('.optbox').forEach(o => {
+    o.addEventListener('click', () => {
+      el.querySelectorAll('.optbox').forEach(x => x.classList.remove('selected'));
+      o.classList.add('selected');
+      o.setAttribute('data-value', o.getAttribute('data-value') || o.textContent.trim());
+      updateSummary();
+    });
+    if(initial.optic && o.getAttribute('data-value') === initial.optic) o.classList.add('selected');
+  });
+
+  // set initial values if provided
+  if(initial.room_name) el.querySelector('[name$="[room_name]"]').value = initial.room_name;
+  if(initial.length) el.querySelector('[name$="[length]"]').value = initial.length;
+  if(initial.module_length) el.querySelector('[name$="[module_length]"]').value = initial.module_length;
+  if(initial.mounting_type) el.querySelector('[name$="[mounting_type]"]').value = initial.mounting_type;
+  if(initial.mount_height) el.querySelector('[name$="[mount_height]"]').value = initial.mount_height;
+  if(initial.dimmable){
+    const rad = el.querySelector(`[name$="[dimmable]"][value="${initial.dimmable}"]`);
+    if(rad) rad.checked = true;
+  }
+  if(initial.inset_type) el.querySelector('[name$="[inset_type]"]').value = initial.inset_type;
+  if(initial.extra_mount) el.querySelector('[name$="[extra_mount]"]').value = initial.extra_mount;
+
+  // when DOM added, update spans
+  configsContainer.appendChild(el);
+  // set the display spans initial
+  el.querySelector('.cfg-room').textContent = el.querySelector('[name$="[room_name]"]').value || 'Onbenoemd';
+  el.querySelector('.cfg-length').textContent = (el.querySelector('[name$="[length]"]').value || 0) + 'm';
+
+  // ensure summary reacts to interactions inside
+  updateSummary();
+  return el;
+}
+
+function updateIndexes(){
+  // reassign display numbers (indexes remain for data names)
+  configsContainer.querySelectorAll('[data-block]').forEach((b, i) => {
+    const num = b.querySelector('.cfg-num');
+    if(num) num.textContent = i+1;
+  });
+}
+
+// basic UI wiring
+addBtn.addEventListener('click', () => createConfig());
+addCopyBtn.addEventListener('click', () => {
+  // duplicate last or create if none
+  const last = configsContainer.querySelector('[data-block]:last-child');
+  if(last){
+    // extract current fields
+    const data = {
+      room_name: last.querySelector('[name$="[room_name]"]').value,
+      length: last.querySelector('[name$="[length]"]').value,
+      module_length: last.querySelector('[name$="[module_length]"]').value,
+      mounting_type: last.querySelector('[name$="[mounting_type]"]').value,
+      mount_height: last.querySelector('[name$="[mount_height]"]').value,
+      color: (last.querySelector('.thumb.selected')?.getAttribute('data-value')) || '',
+      optic: (last.querySelector('.optbox.selected')?.getAttribute('data-value')) || '',
+      dimmable: last.querySelector('[name$="[dimmable]"]:checked')?.value || 'no',
+      inset_type: last.querySelector('[name$="[inset_type]"]').value,
+      extra_mount: last.querySelector('[name$="[extra_mount]"]').value
+    };
+    createConfig(data);
+  } else {
+    createConfig();
+  }
+});
+
+previewJSON.addEventListener('click', () => {
+  const payload = {
+    project_name: projectName.value,
+    configurations: collectConfigs()
+  };
+  jsonContent.textContent = JSON.stringify(payload, null, 2);
+  jsonModal.style.display = 'flex';
+});
+closeJson.addEventListener('click', () => { jsonModal.style.display = 'none'; });
+
+clearAll.addEventListener('click', () => {
+  if(confirm('Alle configuraties verwijderen?')) {
+    configsContainer.innerHTML = '';
+    idxCounter = 0;
+    updateSummary();
+  }
+});
+
+// initial seed config
+createConfig({
+  room_name: 'Meeting Room 01',
+  length: '8.00',
+  module_length: '2.25',
+  mounting_type: 'inbouw',
+  mount_height: '80',
+  color: '3000K',
+  optic: 'wide',
+  dimmable: 'no'
+});
+createConfig({
+  room_name: 'Kantoor Tuin',
+  length: '14.20',
+  module_length: '3.0',
+  mounting_type: 'pendel',
+  mount_height: '2300',
+  color: '4000K',
+  optic: 'narrow',
+  dimmable: 'yes'
+});
+updateSummary();
+
+// finish / navigation
+finishButtons.forEach(b => b.addEventListener('click', () => {
+  // show finish page and scroll
+  finishPage.style.display = 'block';
+  finishPage.scrollIntoView({behavior:'smooth'});
+}));
+backTo.addEventListener('click', () => {
+  finishPage.style.display = 'none';
+  window.scrollTo({top:0, behavior:'smooth'});
+});
+
+sendProject.addEventListener('click', () => {
+  // gather everything and show a fake "sent" confirmation
+  const payload = {
+    project_name: projectName.value,
+    contact: Object.fromEntries(new FormData(document.getElementById('finishForm')).entries()),
+    configurations: collectConfigs()
+  };
+  // in a real app, you'd POST payload to server here.
+  alert('Project verzonden!\n\nBekijk console voor JSON payload.');
+  console.log('Payload:', payload);
+});
+
+// close modal on outside click
+jsonModal.addEventListener('click', (ev) => { if(ev.target === jsonModal) jsonModal.style.display = 'none'; });
+
+</script>
+</body>
+</html>
