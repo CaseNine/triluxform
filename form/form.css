@@ -1,19 +1,16 @@
-/*
-Source - https://stackoverflow.com/a
-Posted by baao
-Retrieved 2025-11-18, License - CC BY-SA 4.0
-*/
-
-#btn-group {
-  /*display: flex;*/
-  flex-direction: column;
-  align-items: flex-start;
-}
-
-#btn-group>button {
-  margin: 2px;
-}
-
 .my-font {
   font-family: monospace;
 }
+
+/* small custom styles that Bootstrap doesn't cover */
+    :root{ --accent:#d90404; }
+    body{ background:#f3f4f6; color:#111; }
+    .thumb{ width:96px; height:56px; border-radius:8px; border:2px solid transparent; display:flex; align-items:center; justify-content:center; cursor:pointer; box-shadow:0 2px 8px rgba(0,0,0,0.04); position:relative }
+    .thumb.selected{ border-color:var(--accent); }
+    .optbox{ padding:10px; border-radius:8px; border:1px dashed #eee; text-align:center; font-size:13px; cursor:pointer }
+    .optbox.selected{ border-color:var(--accent); box-shadow:0 2px 8px rgba(0,0,0,0.04) }
+    .cfg-card{ margin-bottom:12px }
+    .small-muted{ font-size:0.85rem; color:#9aa1a7 }
+    /* summary list look */
+    .summary-item + .summary-item{ border-top:1px solid #f1f1f1 }
+    #finish-page{ display:none }

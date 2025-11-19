@@ -16,6 +16,10 @@
   const jsonModalEl = document.getElementById('jsonModal');
   const jsonModal = new bootstrap.Modal(jsonModalEl);
 
+  //const minus = document.getElementById('minus');
+  //const plus = document.getElementById('plus');
+  //const identicalLengths = document.getElementById('identical-lengths');
+
   let idxCounter = 0;
 
   function collectConfigs(){
@@ -150,7 +154,7 @@
     // set initial values if provided
     if(initial.room_name) el.querySelector('[name$="[room_name]"]').value = initial.room_name;
     if(initial.length) el.querySelector('[name$="[length]"]').value = initial.length;
-    if(initial.module_length) el.querySelector('[name$="[module_length]"]').value = initial.module_length;
+    //if(initial.module_length) el.querySelector('[name$="[module_length]"]').value = initial.module_length;
     if(initial.mounting_type) el.querySelector('[name$="[mounting_type]"]').value = initial.mounting_type;
     if(initial.mount_height) el.querySelector('[name$="[mount_height]"]').value = initial.mount_height;
     if(initial.dimmable){
@@ -166,6 +170,21 @@
     const appended = configsContainer.querySelector('[data-block]:last-child');
     appended.querySelector('.cfg-room').textContent = appended.querySelector('[name$="[room_name]"]').value || 'Onbenoemd';
     appended.querySelector('.cfg-length').textContent = (appended.querySelector('[name$="[length]"]').value || 0) + 'm';
+
+    const minus = document.getElementById('minus');
+    const plus = document.getElementById('plus');
+    const identicalLengths = document.getElementById('identical-lengths');
+
+    minus.addEventListener('click', () => {
+      if(identicalLengths.value > 0){
+        identicalLengths.value = identicalLengths.value - 1;
+      }
+    });
+
+    plus.addEventListener('click', () => {
+      const currentValue = Number(identicalLengths.value) || 0;
+      identicalLengths.value = currentValue + 1;
+    });
 
     updateSummary();
     return appended;
