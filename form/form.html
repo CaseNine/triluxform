@@ -135,15 +135,15 @@
               Lengte lichtlijn in meters 
             </label>
             <input type="number" step="0.01" name="length" class="form-control" placeholder="Bijv. 3 meter">
-            <div class="small-muted">
-              <label for="form-label">
-                Aantal identieke lengtes lightlijn
-              </label>
-              <div class="input-group mb-3">
-                  <button class="btn btn-light input-group-text" name="minus">-</button>
-                  <input class="form-control" name="identical_lengths_lightlines" type="number" step="1" value="0" placeholder="0" oninput="this.value = !!this.value && Math.abs(this.value) >= 0 ? Math.abs(this.value) : null">
-                  <button class="btn btn-secondary input-group-text" name="plus">+</button>
-                </div>
+            <label for="form-label">
+              Aantal identieke lengtes lightlijn
+            </label>
+            <div class="col-3">
+              <div class="input-group">
+                <button class="btn btn-light input-group-text" name="minus">-</button>
+                <input class="form-control" name="identical_lengths_lightlines" type="number" step="1" value="0" placeholder="0" oninput="this.value = !!this.value && Math.abs(this.value) >= 0 ? Math.abs(this.value) : null">
+                <button class="btn btn-secondary input-group-text" name="plus">+</button>
+              </div>
             </div>
           </div>
 
@@ -153,30 +153,19 @@
                  Module lengte
                 </label>
                 <div id="btn-group">
-                  <button name="twotwofivezero" class="btn btn-light" data-bs-toggle="button" data-number="2250">2.250 mm</button>
-                  <button name="onefivezerozero" class="btn btn-light" data-bs-toggle="button" data-number="1500">1.500 mm</button>
+                  <button class="module_length btn btn-light" data-bs-toggle="button" data-value="2250">2.250 mm</button>
+                  <button class="module_length btn btn-light" data-bs-toggle="button" data-value="1500">1.500 mm</button>
                 </div>
-              <!-- <select name="module_length" class="form-select">
-                <option value="2.25">2.25 m</option>
-                <option value="3.0">3.00 m</option>
-                <option value="4.0">4.00 m</option>
-              </select> -->
           </div>
 
           <div class="mb-3">
-            <label class="form-label"> Montage / Luchtspiegel</label>
-            <div class="row g-2">
-              <select name="mounting_type" class="form-select">
-                <option value="inbouw">Inbouw</option>
-                <option value="opbouw">Opbouw</option>
-                <option value="pendel">Pendel</option>
-              </select>
-              <div class="col-6">
-                <label class="form-label">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M16 7V2.6a.6.6 0 0 0-.6-.6H8.6a.6.6 0 0 0-.6.6v18.8a.6.6 0 0 0 .6.6h6.8a.6.6 0 0 0 .6-.6V17m0-10h-3m3 0v5m0 0h-3m3 0v5m0 0h-3"/></svg>
-                  Montage hoogte (mm)
-                </label>
-                <input type="number" name="mount_height" class="form-control" placeholder="H (mm)">
+              <label class="form-label">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M16 7V2.6a.6.6 0 0 0-.6-.6H8.6a.6.6 0 0 0-.6.6v18.8a.6.6 0 0 0 .6.6h6.8a.6.6 0 0 0 .6-.6V17m0-10h-3m3 0v5m0 0h-3m3 0v5m0 0h-3"/></svg>
+                Montage hoogte (mm)
+              </label>
+              <div id="btn-group">
+                <button class="mount_height btn btn-light" data-bs-toggle="button" data-value="4-8 / 8000">4-8 meter / 8.000 lumen</button>
+                <button class="mount_height btn btn-light" data-bs-toggle="button" data-value="8-12 / 12000">8-12 meter / 12.000 lumen</button>
               </div>
             </div>
           </div>
@@ -219,13 +208,9 @@
               Dimbaar
             </label>
             <div class="d-flex gap-3 align-items-center">
-              <div class="form-check">
-                <input class="form-check-input" type="radio" name="dimmable" value="yes" id="dimYes">
-                <label class="form-check-label" for="dimYes">Ja</label>
-              </div>
-              <div class="form-check">
-                <input class="form-check-input" type="radio" name="dimmable" value="no" id="dimNo" checked>
-                <label class="form-check-label" for="dimNo">Nee</label>
+              <div id="btn-group">
+                <button class="dimmable btn btn-light" data-bs-toggle="button" data-value="Ja">Ja</button>
+                <button class="dimmable btn btn-light" data-bs-toggle="button" data-value="Nee">Nee</button>
               </div>
               <div class="small-muted">Dimbaarheid kan invloed hebben op driver keuze</div>
             </div>
@@ -236,6 +221,10 @@
               <i class="bi bi-grid-3x3-gap"></i>
               Indeling lichtlijn
             </label>
+              <div id="btn-group">
+                <button class="distribute_lightline btn btn-light" data-bs-toggle="button" data-value="Volledige lijn">Volledige lijn</button>
+                <button class="distribute_lightline btn btn-light" data-bs-toggle="button" data-value="1 armatuur, 1 blind">1 armatuur, 1 blind</button>
+              </div>
           </div>
 
           <div class="mb-3">
@@ -243,27 +232,11 @@
               <i class="bi bi-tools"></i>
               Montage
             </label>
-          </div>
-
-          <div class="mb-3">
-            <label class="form-label">Inleg / opbouw</label>
-            <div class="row g-2">
-              <div class="col-6">
-                <label class="form-label small-muted">Inleg type</label>
-                <select name="inset_type" class="form-select">
-                  <option value="inleg">Inleg</option>
-                  <option value="opbouw">Opbouw</option>
-                </select>
+              <div id="btn-group">
+                <button class="montage btn btn-light" data-bs-toggle="button" data-value="Opbouw">Opbouw</button>
+                <button class="montage btn btn-light" data-bs-toggle="button" data-value="Gependeld compleet 1,5 meter">Gependeld compleet 1,5 meter</button>
+                <button class="montage btn btn-light" data-bs-toggle="button" data-value="Gependeld met beugel en ketting op maat">Gependeld met beugel en ketting op maat</button>
               </div>
-              <div class="col-6">
-                <label class="form-label small-muted">Extra montage</label>
-                <select name="extra_mount" class="form-select">
-                  <option value="none">Geen</option>
-                  <option value="suspension">Suspension kit</option>
-                  <option value="custom">Custom</option>
-                </select>
-              </div>
-            </div>
           </div>
 
           <div class="d-flex justify-content-end align-items-center">
