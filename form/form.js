@@ -51,8 +51,23 @@
     arr.forEach((c, i) => { 
       const li = document.createElement('li');
       li.className = 'summary-item py-2';
-      li.innerHTML = `<div><strong>${i+1}. ${c.room_name || 'Onbenoemd'}</strong><div class="small-muted">${(c.length||0)} m · ${c.color || ''} · ${c.optic || ''}</div></div>
-                      <div class="small-muted">${c.dimmable === 'yes' ? 'Dimbaar' : ''}</div>`;
+      li.innerHTML = `<div><strong>${i+1}. ${c.room_name || 'Onbenoemd'}</strong>
+                      <div id="lengte-lichtlijn"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 15 15"><path fill="currentColor" d="M14.6 4.01a.5.5 0 0 1 .4.49v6a.5.5 0 0 1-.5.5H.5a.5.5 0 0 1-.5-.5v-6l.01-.1A.5.5 0 0 1 .5 4h14zM1 10h13V5h-1.075v1.5a.425.425 0 1 1-.85 0V5h-1.15v1.5a.425.425 0 1 1-.85 0V5h-1.15v2.5a.425.425 0 1 1-.85 0V5h-1.15v1.5a.425.425 0 1 1-.85 0V5h-1.15v1.5a.425.425 0 1 1-.85 0V5h-1.15v2.5a.425.425 0 1 1-.85 0V5H1z"/></svg>
+                      Lengte lichtlijn <div class="small-muted">${(c.length||0)} m </div>
+                      <i>Aantal identieke lengtes lichtlijn</i> <div class="small-muted"> ${(c.lengthSpan||0)} </div>
+                      </div> 
+                      <div id="module-lengte"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"><path fill="currentColor" d="M3 21V3h18v18zm2-2h14v-5H5zm0-7h14V5H5zm0 0V5z"/></svg>
+                      Module lengte <div class="small-muted">${(c.module_length||0)}</div>
+                      </div>
+                      <div id="MontagehoogteLumenpakket"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 15 15"><path fill="currentColor" d="M14.6 4.01a.5.5 0 0 1 .4.49v6a.5.5 0 0 1-.5.5H.5a.5.5 0 0 1-.5-.5v-6l.01-.1A.5.5 0 0 1 .5 4h14zM1 10h13V5h-1.075v1.5a.425.425 0 1 1-.85 0V5h-1.15v1.5a.425.425 0 1 1-.85 0V5h-1.15v2.5a.425.425 0 1 1-.85 0V5h-1.15v1.5a.425.425 0 1 1-.85 0V5h-1.15v1.5a.425.425 0 1 1-.85 0V5h-1.15v2.5a.425.425 0 1 1-.85 0V5H1z"/></svg>
+                      Montagehoogte/Lumenpakket <div class="small-muted">${(c.mount_height||0)}</div>
+                      </div>
+                      <i class="bi-sun"></i> Lichtkleur <div class="small-muted">${(c.color||0)}</div>
+                      <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 48 48"><circle cx="25.193" cy="24" r="10.574" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/><circle cx="21.331" cy="12.115" r="8.613" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/><circle cx="35.303" cy="16.655" r="8.613" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/><circle cx="35.303" cy="31.345" r="8.613" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/><circle cx="21.331" cy="35.885" r="8.613" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/><circle cx="12.697" cy="24" r="8.613" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/></svg>
+                      Optiek <div class="small-muted">${c.optic || ''}</div>
+                      <i class="bi-sun"></i> Dimbaar <div class="small-muted">${c.dimmable === 'yes' ? 'Ja' : 'Nee'}</div>
+                      <i class="bi bi-grid-3x3-gap"></i> Indeling lichtlijn <div class="small-muted">${(c.color||0)}</div>
+                      <i class="bi bi-tools"></i> Montage <div class="small-muted">${(c.color||0)}</div></div>`;
       summaryList.appendChild(li);
     });
   }
