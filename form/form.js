@@ -15,10 +15,7 @@
   const projectName = document.getElementById('projectName');
   const jsonModalEl = document.getElementById('jsonModal');
   const jsonModal = new bootstrap.Modal(jsonModalEl);
-
-  //const minus = document.getElementById('minus');
-  //const plus = document.getElementById('plus');
-  //const identicalLengths = document.getElementById('identical-lengths');
+  var module_length = '0 mm';
 
   let idxCounter = 0;
 
@@ -29,7 +26,8 @@
       const obj = {};
       obj.room_name = b.querySelector('[name$="[room_name]"]')?.value || '';
       obj.length = parseFloat(b.querySelector('[name$="[length]"]')?.value || 0);
-      obj.module_length = b.querySelector('[name$="[module_length]"]')?.value || '';
+      obj.identical_lengths_lightlines = parseFloat(b.querySelector('[name$="[identical_lengths_lightlines]"]')?.value || 0);
+      obj.module_length = module_length;
       obj.mounting_type = b.querySelector('[name$="[mounting_type]"]')?.value || '';
       obj.mount_height = b.querySelector('[name$="[mount_height]"]')?.value || '';
       const thumb = b.querySelector('.thumb.selected');
@@ -51,17 +49,14 @@
     arr.forEach((c, i) => { 
       const li = document.createElement('li');
       li.className = 'summary-item py-2';
-      li.innerHTML = `<div><strong>${i+1}. ${c.room_name || 'Onbenoemd'}</strong>
-                      <div id="lengte-lichtlijn"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 15 15"><path fill="currentColor" d="M14.6 4.01a.5.5 0 0 1 .4.49v6a.5.5 0 0 1-.5.5H.5a.5.5 0 0 1-.5-.5v-6l.01-.1A.5.5 0 0 1 .5 4h14zM1 10h13V5h-1.075v1.5a.425.425 0 1 1-.85 0V5h-1.15v1.5a.425.425 0 1 1-.85 0V5h-1.15v2.5a.425.425 0 1 1-.85 0V5h-1.15v1.5a.425.425 0 1 1-.85 0V5h-1.15v1.5a.425.425 0 1 1-.85 0V5h-1.15v2.5a.425.425 0 1 1-.85 0V5H1z"/></svg>
+      li.innerHTML = `<div><strong>${i+1}. ${c.room_name || 'Onbenoemd'}</strong><br>
+                      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 15 15"><path fill="currentColor" d="M14.6 4.01a.5.5 0 0 1 .4.49v6a.5.5 0 0 1-.5.5H.5a.5.5 0 0 1-.5-.5v-6l.01-.1A.5.5 0 0 1 .5 4h14zM1 10h13V5h-1.075v1.5a.425.425 0 1 1-.85 0V5h-1.15v1.5a.425.425 0 1 1-.85 0V5h-1.15v2.5a.425.425 0 1 1-.85 0V5h-1.15v1.5a.425.425 0 1 1-.85 0V5h-1.15v1.5a.425.425 0 1 1-.85 0V5h-1.15v2.5a.425.425 0 1 1-.85 0V5H1z"/></svg>
                       Lengte lichtlijn <div class="small-muted">${(c.length||0)} m </div>
-                      <i>Aantal identieke lengtes lichtlijn</i> <div class="small-muted"> ${(c.lengthSpan||0)} </div>
-                      </div> 
-                      <div id="module-lengte"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"><path fill="currentColor" d="M3 21V3h18v18zm2-2h14v-5H5zm0-7h14V5H5zm0 0V5z"/></svg>
-                      Module lengte <div class="small-muted">${(c.module_length||0)}</div>
-                      </div>
-                      <div id="MontagehoogteLumenpakket"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 15 15"><path fill="currentColor" d="M14.6 4.01a.5.5 0 0 1 .4.49v6a.5.5 0 0 1-.5.5H.5a.5.5 0 0 1-.5-.5v-6l.01-.1A.5.5 0 0 1 .5 4h14zM1 10h13V5h-1.075v1.5a.425.425 0 1 1-.85 0V5h-1.15v1.5a.425.425 0 1 1-.85 0V5h-1.15v2.5a.425.425 0 1 1-.85 0V5h-1.15v1.5a.425.425 0 1 1-.85 0V5h-1.15v1.5a.425.425 0 1 1-.85 0V5h-1.15v2.5a.425.425 0 1 1-.85 0V5H1z"/></svg>
+                      <i>Aantal identieke lengtes lichtlijn</i> <div class="small-muted"> ${(c.identical_lengths_lightlines||0)} </div>
+                      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"><path fill="currentColor" d="M3 21V3h18v18zm2-2h14v-5H5zm0-7h14V5H5zm0 0V5z"/></svg>
+                      Module lengte <div class="small-muted">${(c.module_length)}</div>
+                      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 15 15"><path fill="currentColor" d="M14.6 4.01a.5.5 0 0 1 .4.49v6a.5.5 0 0 1-.5.5H.5a.5.5 0 0 1-.5-.5v-6l.01-.1A.5.5 0 0 1 .5 4h14zM1 10h13V5h-1.075v1.5a.425.425 0 1 1-.85 0V5h-1.15v1.5a.425.425 0 1 1-.85 0V5h-1.15v2.5a.425.425 0 1 1-.85 0V5h-1.15v1.5a.425.425 0 1 1-.85 0V5h-1.15v1.5a.425.425 0 1 1-.85 0V5h-1.15v2.5a.425.425 0 1 1-.85 0V5H1z"/></svg>
                       Montagehoogte/Lumenpakket <div class="small-muted">${(c.mount_height||0)}</div>
-                      </div>
                       <i class="bi-sun"></i> Lichtkleur <div class="small-muted">${(c.color||0)}</div>
                       <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 48 48"><circle cx="25.193" cy="24" r="10.574" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/><circle cx="21.331" cy="12.115" r="8.613" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/><circle cx="35.303" cy="16.655" r="8.613" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/><circle cx="35.303" cy="31.345" r="8.613" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/><circle cx="21.331" cy="35.885" r="8.613" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/><circle cx="12.697" cy="24" r="8.613" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/></svg>
                       Optiek <div class="small-muted">${c.optic || ''}</div>
@@ -115,7 +110,8 @@
       const data = {
         room_name: el.querySelector('[name$="[room_name]"]').value,
         length: el.querySelector('[name$="[length]"]').value,
-        module_length: el.querySelector('[name$="[module_length]"]').value,
+        identical_lengths_lightlines: el.querySelector('[name$="[identical_lengths_lightlines]"]').value,
+        module_length: module_length,
         mounting_type: el.querySelector('[name$="[mounting_type]"]').value,
         mount_height: el.querySelector('[name$="[mount_height]"]').value,
         color: (el.querySelector('.thumb.selected')?.getAttribute('data-value')) || '',
@@ -186,19 +182,46 @@
     appended.querySelector('.cfg-room').textContent = appended.querySelector('[name$="[room_name]"]').value || 'Onbenoemd';
     appended.querySelector('.cfg-length').textContent = (appended.querySelector('[name$="[length]"]').value || 0) + 'm';
 
-    const minus = document.getElementById('minus');
-    const plus = document.getElementById('plus');
-    const identicalLengths = document.getElementById('identical-lengths');
+    const minus = el.querySelector('[name$="[minus]"');
+    const plus = el.querySelector('[name$="[plus]"');
+    const identical_lengths_lightlines = el.querySelector('[name$="[identical_lengths_lightlines]"');
 
     minus.addEventListener('click', () => {
-      if(identicalLengths.value > 0){
-        identicalLengths.value = identicalLengths.value - 1;
+      if(identical_lengths_lightlines.value > 0){
+        identical_lengths_lightlines.value = identical_lengths_lightlines.value - 1;
+        updateSummary();
       }
     });
 
     plus.addEventListener('click', () => {
-      const currentValue = Number(identicalLengths.value) || 0;
-      identicalLengths.value = currentValue + 1;
+      const currentValue = Number(identical_lengths_lightlines.value) || 0;
+      identical_lengths_lightlines.value = currentValue + 1;
+      updateSummary();
+    });
+
+    const twotwofivezero = el.querySelector('[name$="[twotwofivezero]"');
+    const onefivezerozero = el.querySelector('[name$="[onefivezerozero]"');
+
+    twotwofivezero.addEventListener('click', () => {
+      if(twotwofivezero.getAttribute("aria-pressed") == 'true'){ // Click on the button before it's active.
+        onefivezerozero.classList.remove('active');
+        onefivezerozero.setAttribute("aria-pressed", "false");
+        module_length = '2.250 mm';
+      } else { // Click on the button to set it inactive.
+        module_length = '0 mm';
+      }
+      updateSummary();
+    });
+
+    onefivezerozero.addEventListener('click', () => {
+      if(onefivezerozero.getAttribute("aria-pressed") == 'true'){ // Click on the button before it's active.
+        twotwofivezero.classList.remove('active');
+        twotwofivezero.setAttribute("aria-pressed", "false");
+        module_length = '1.500 mm';
+      } else { // Click on the button to set it inactive.
+        module_length = '0 mm';
+      }
+      updateSummary();
     });
 
     updateSummary();
@@ -220,6 +243,7 @@
       const data = {
         room_name: last.querySelector('[name$="[room_name]"]').value,
         length: last.querySelector('[name$="[length]"]').value,
+        identical_lengths_lightlines: last.querySelector('[name$="[identical_lengths_lightlines]"]').value,
         module_length: last.querySelector('[name$="[module_length]"]').value,
         mounting_type: last.querySelector('[name$="[mounting_type]"]').value,
         mount_height: last.querySelector('[name$="[mount_height]"]').value,

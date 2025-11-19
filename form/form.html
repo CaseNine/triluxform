@@ -140,9 +140,9 @@
                 Aantal identieke lengtes lightlijn
               </label>
               <div class="input-group mb-3">
-                  <button class="btn input-group-text" id="minus">-</button>
-                  <input class="form-control" id="identical-lengths" type="number" step="1" value="0" placeholder="0" oninput="this.value = !!this.value && Math.abs(this.value) >= 0 ? Math.abs(this.value) : null">
-                  <button class="btn input-group-text" id="plus">+</button>
+                  <button class="btn btn-light input-group-text" name="minus">-</button>
+                  <input class="form-control" name="identical_lengths_lightlines" type="number" step="1" value="0" placeholder="0" oninput="this.value = !!this.value && Math.abs(this.value) >= 0 ? Math.abs(this.value) : null">
+                  <button class="btn btn-secondary input-group-text" name="plus">+</button>
                 </div>
             </div>
           </div>
@@ -153,8 +153,8 @@
                  Module lengte
                 </label>
                 <div id="btn-group">
-                  <button class="btn" data-number="2250">2.250 mm</button>
-                  <button class="btn" data-number="1500">1.500 mm</button>
+                  <button name="twotwofivezero" class="btn btn-light" data-bs-toggle="button" data-number="2250">2.250 mm</button>
+                  <button name="onefivezerozero" class="btn btn-light" data-bs-toggle="button" data-number="1500">1.500 mm</button>
                 </div>
               <!-- <select name="module_length" class="form-select">
                 <option value="2.25">2.25 m</option>
