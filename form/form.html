@@ -112,12 +112,15 @@
     <div class="card cfg-card" data-block>
       <div class="card-body">
         <div class="d-flex justify-content-between align-items-start mb-2">
-          <div>
-            <div class="fw-semibold proj-name">Configuratie <span class="cfg-num">1</span></div>
+          <div data-bs-toggle="collapse" data-bs-target=".content">
+            <div class="fw-semibold proj-name">
+            <i class="bi bi-chevron-compact-down"></i><i class="bi bi-chevron-compact-right"></i> 
+            Configuratie <span class="cfg-num">1</span>
+          </div>
             <div class="small-muted">Ruimte: <span class="cfg-room">Onbenoemd</span> · <span class="cfg-length">0m</span></div>
           </div>
           <div class="btn-group btn-group-sm" role="group">
-            <button type="button" class="btn btn-outline-secondary toggle-collapse" data-bs-toggle="collapse" data-bs-target=".content">Inklappen</button>
+            <!-- <button type="button" class="btn btn-outline-secondary toggle-collapse" data-bs-toggle="collapse" data-bs-target=".content">Inklappen</button> -->
             <button type="button" class="btn btn-dark" data-action="duplicate">Kopieer</button>
             <button type="button" class="btn btn-outline-secondary" data-action="remove">Verwijderen</button>
           </div>
@@ -159,14 +162,13 @@
           </div>
 
           <div class="row mb-3">
-              <label class="form-label">
-                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M16 7V2.6a.6.6 0 0 0-.6-.6H8.6a.6.6 0 0 0-.6.6v18.8a.6.6 0 0 0 .6.6h6.8a.6.6 0 0 0 .6-.6V17m0-10h-3m3 0v5m0 0h-3m3 0v5m0 0h-3"/></svg>
-                Montage hoogte (mm)
-              </label>
-              <div id="btn-group">
-                <button class="mount_height btn btn-light" data-bs-toggle="button" data-value="4-8 / 8000">4-8 meter / 8.000 lumen</button>
-                <button class="mount_height btn btn-light" data-bs-toggle="button" data-value="8-12 / 12000">8-12 meter / 12.000 lumen</button>
-              </div>
+            <label class="form-label">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M16 7V2.6a.6.6 0 0 0-.6-.6H8.6a.6.6 0 0 0-.6.6v18.8a.6.6 0 0 0 .6.6h6.8a.6.6 0 0 0 .6-.6V17m0-10h-3m3 0v5m0 0h-3m3 0v5m0 0h-3"/></svg>
+              Montage hoogte (mm)
+            </label>
+            <div id="btn-group">
+              <button class="mount_height btn btn-light" data-bs-toggle="button" data-value="4-8 / 8000">4-8 meter / 8.000 lumen</button>
+              <button class="mount_height btn btn-light" data-bs-toggle="button" data-value="8-12 / 12000">8-12 meter / 12.000 lumen</button>
             </div>
           </div>
 

@@ -51,8 +51,9 @@
     arr.forEach((c, i) => { 
       const li = document.createElement('li');
       li.className = 'summary-item py-2';
-      li.innerHTML = `<div><strong>${i+1}. ${c.room_name || 'Onbenoemd'}</strong><br>
-                      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 15 15"><path fill="currentColor" d="M14.6 4.01a.5.5 0 0 1 .4.49v6a.5.5 0 0 1-.5.5H.5a.5.5 0 0 1-.5-.5v-6l.01-.1A.5.5 0 0 1 .5 4h14zM1 10h13V5h-1.075v1.5a.425.425 0 1 1-.85 0V5h-1.15v1.5a.425.425 0 1 1-.85 0V5h-1.15v2.5a.425.425 0 1 1-.85 0V5h-1.15v1.5a.425.425 0 1 1-.85 0V5h-1.15v1.5a.425.425 0 1 1-.85 0V5h-1.15v2.5a.425.425 0 1 1-.85 0V5H1z"/></svg>
+      li.innerHTML = `<div class="bi-chevron-compact-down" href="#summary-data[${i}]" data-bs-toggle="collapse" role="button" aria-expanded="false" summary-block>
+                      <strong>${i+1}. ${c.room_name || 'Onbenoemd'}</strong></div>
+                      <div id="summary-data[${i}]" class="collapse"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 15 15"><path fill="currentColor" d="M14.6 4.01a.5.5 0 0 1 .4.49v6a.5.5 0 0 1-.5.5H.5a.5.5 0 0 1-.5-.5v-6l.01-.1A.5.5 0 0 1 .5 4h14zM1 10h13V5h-1.075v1.5a.425.425 0 1 1-.85 0V5h-1.15v1.5a.425.425 0 1 1-.85 0V5h-1.15v2.5a.425.425 0 1 1-.85 0V5h-1.15v1.5a.425.425 0 1 1-.85 0V5h-1.15v1.5a.425.425 0 1 1-.85 0V5h-1.15v2.5a.425.425 0 1 1-.85 0V5H1z"/></svg>
                       Lengte lichtlijn <div class="small-muted">${(c.length||0)} m </div>
                       <i>Aantal identieke lengtes lichtlijn</i> <div class="small-muted"> ${(c.identical_lengths_lightlines||0)} </div>
                       <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"><path fill="currentColor" d="M3 21V3h18v18zm2-2h14v-5H5zm0-7h14V5H5zm0 0V5z"/></svg>
@@ -66,6 +67,18 @@
                       <i class="bi bi-grid-3x3-gap"></i> Indeling lichtlijn <div class="small-muted">${(c.distribute_lightline||'<br>')}</div>
                       <i class="bi bi-tools"></i> Montage <div class="small-muted">${(c.montage||'<br>')}</div></div>`;
       summaryList.appendChild(li);
+    });
+
+    document.querySelectorAll('[summary-block]').forEach(s => {
+      s.addEventListener('click', () => {
+        if(s.getAttribute("aria-expanded") == "true"){
+          s.classList.remove('bi-chevron-compact-down');
+          s.classList.add('bi-chevron-compact-right');
+        } else {
+          s.classList.remove('bi-chevron-compact-right');
+          s.classList.add('bi-chevron-compact-down');
+        }
+      });
     });
   }
 
