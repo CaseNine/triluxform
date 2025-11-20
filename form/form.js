@@ -176,28 +176,27 @@
       if(initial.optic && o.getAttribute('data-value') === initial.optic) o.classList.add('selected');
     });
 
-
     onlyOneButtonIsActivePerClass(el, 'module_length');
     onlyOneButtonIsActivePerClass(el, 'mount_height');
     onlyOneButtonIsActivePerClass(el, 'dimmable');
     onlyOneButtonIsActivePerClass(el, 'distribute_lightline');
     onlyOneButtonIsActivePerClass(el, 'montage');
 
-    // Each configurion only collapses itself.
+    // Make it so each configurion only collapses itself.
     el.querySelector('#collapsible').id = `collapsible[${idx}]`;
     const collapser = el.querySelector('#collapser');
     collapser.setAttribute('href', `#collapsible[${idx}]`);
 
     collapser.addEventListener('click', () => {
-        const s = collapser.children[0];
-        if(collapser.getAttribute("aria-expanded") == "true"){
-          s.classList.remove('bi-chevron-compact-down');
-          s.classList.add('bi-chevron-compact-right');
-        } else {
-          s.classList.remove('bi-chevron-compact-right');
-          s.classList.add('bi-chevron-compact-down');
-        }
-      });
+      const s = collapser.children[0];
+      if(collapser.getAttribute("aria-expanded") == "true"){
+        s.classList.remove('bi-chevron-compact-down');
+        s.classList.add('bi-chevron-compact-right');
+      } else {
+        s.classList.remove('bi-chevron-compact-right');
+        s.classList.add('bi-chevron-compact-down');
+      }
+    });
 
     // set initial values if provided
     if(initial.room_name) el.querySelector('[name$="[room_name]"]').value = initial.room_name;
