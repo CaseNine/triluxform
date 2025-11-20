@@ -262,6 +262,7 @@
     const payload = { project_name: projectName.value, contact: Object.fromEntries(new FormData(document.getElementById('finishForm')).entries()), configurations: collectConfigs() };
     alert('Project verzonden!\n\nBekijk console voor JSON payload.');
     console.log('Payload:', payload);
+    submitForm(JSON.stringify(payload));
   });
 
   function createBootstrapButtonClickEvents(el, className){
@@ -277,4 +278,21 @@
       });
     });
   }
+
+  async function submitForm(payload){
+    try {
+      const response = await fetch("handler.php", {
+        method: "POST",
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: payload,
+      });
+      console.log('output:');
+      //console.log(await response.text());
+      console.log(await response.json());
+    } catch (e) {
+      console.error(e);
+    }
+  }  
 })();
