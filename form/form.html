@@ -112,11 +112,10 @@
     <div class="card cfg-card" data-block>
       <div class="card-body">
         <div class="d-flex justify-content-between align-items-start mb-2">
-          <div data-bs-toggle="collapse" data-bs-target=".content">
-            <div class="fw-semibold proj-name">
-            <i class="bi bi-chevron-compact-down"></i><i class="bi bi-chevron-compact-right"></i> 
+          <div id="collapser" data-bs-toggle="collapse" href="#collapsible" role="button" aria-expanded="true">
+            <div class="fw-semibold proj-name bi-chevron-compact-right">
             Configuratie <span class="cfg-num">1</span>
-          </div>
+            </div>
             <div class="small-muted">Ruimte: <span class="cfg-room">Onbenoemd</span> · <span class="cfg-length">0m</span></div>
           </div>
           <div class="btn-group btn-group-sm" role="group">
@@ -126,7 +125,7 @@
           </div>
         </div>
 
-        <div class="collapse show content">
+        <div id="collapsible" class="collapse show content">
           <div class="mb-3">
             <label class="form-label">Naam van ruimte</label>
             <input type="text" name="room_name" class="form-control" placeholder="Bijv. Kantoor Tuin">

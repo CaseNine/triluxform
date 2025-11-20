@@ -69,7 +69,7 @@
       summaryList.appendChild(li);
     });
 
-    document.querySelectorAll('[summary-block]').forEach(s => {
+    summaryList.querySelectorAll('[summary-block]').forEach(s => {
       s.addEventListener('click', () => {
         if(s.getAttribute("aria-expanded") == "true"){
           s.classList.remove('bi-chevron-compact-down');
@@ -176,11 +176,28 @@
       if(initial.optic && o.getAttribute('data-value') === initial.optic) o.classList.add('selected');
     });
 
-    createBootstrapButtonClickEvents(el, 'module_length');
-    createBootstrapButtonClickEvents(el, 'mount_height');
-    createBootstrapButtonClickEvents(el, 'dimmable');
-    createBootstrapButtonClickEvents(el, 'distribute_lightline');
-    createBootstrapButtonClickEvents(el, 'montage');
+
+    onlyOneButtonIsActivePerClass(el, 'module_length');
+    onlyOneButtonIsActivePerClass(el, 'mount_height');
+    onlyOneButtonIsActivePerClass(el, 'dimmable');
+    onlyOneButtonIsActivePerClass(el, 'distribute_lightline');
+    onlyOneButtonIsActivePerClass(el, 'montage');
+
+    // Each configurion only collapses itself.
+    el.querySelector('#collapsible').id = `collapsible[${idx}]`;
+    const collapser = el.querySelector('#collapser');
+    collapser.setAttribute('href', `#collapsible[${idx}]`);
+
+    collapser.addEventListener('click', () => {
+        const s = collapser.children[0];
+        if(collapser.getAttribute("aria-expanded") == "true"){
+          s.classList.remove('bi-chevron-compact-down');
+          s.classList.add('bi-chevron-compact-right');
+        } else {
+          s.classList.remove('bi-chevron-compact-right');
+          s.classList.add('bi-chevron-compact-down');
+        }
+      });
 
     // set initial values if provided
     if(initial.room_name) el.querySelector('[name$="[room_name]"]').value = initial.room_name;
@@ -195,6 +212,7 @@
     appended.querySelector('.cfg-room').textContent = appended.querySelector('[name$="[room_name]"]').value || 'Onbenoemd';
     appended.querySelector('.cfg-length').textContent = (appended.querySelector('[name$="[length]"]').value || 0) + 'm';
 
+    // Add functionality to the minus and plus buttons so that they only update identical lengths lightlines.
     const minus = el.querySelector('[name$="[minus]"');
     const plus = el.querySelector('[name$="[plus]"');
     const identical_lengths_lightlines = el.querySelector('[name$="[identical_lengths_lightlines]"');
@@ -278,7 +296,7 @@
     submitForm(JSON.stringify(payload));
   });
 
-  function createBootstrapButtonClickEvents(el, className){
+  function onlyOneButtonIsActivePerClass(el, className){
     el.querySelectorAll('.' + className).forEach(o => {
       o.addEventListener('click', () => {
         el.querySelectorAll('.' + className + '.active').forEach(x => {
