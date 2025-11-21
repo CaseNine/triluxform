@@ -23,25 +23,25 @@
     const arr = [];
     blocks.forEach((b, i) => {
       const obj = {};
-      obj.room_name = b.querySelector('[name$="[room_name]"]')?.value || '';
-      obj.length = parseFloat(b.querySelector('[name$="[length]"]')?.value || 0);
-      obj.identical_lengths_lightlines = parseFloat(b.querySelector('[name$="[identical_lengths_lightlines]"]')?.value || 0);
-      module_length = b.querySelector('.module_length.active');
-      obj.module_length = module_length ? module_length.getAttribute('data-value') : '';
-      mount_height = b.querySelector('.mount_height.active');
-      obj.mount_height = mount_height ? mount_height.getAttribute('data-value') : '';
-      const thumb = b.querySelector('.thumb.selected');
-      obj.color = thumb ? thumb.getAttribute('data-value') : '';
-      const opt = b.querySelector('.optbox.selected');
-      obj.optic = opt ? opt.getAttribute('data-value') : '';
-      dimmable = b.querySelector('.dimmable.active');
-      obj.dimmable = dimmable ? dimmable.getAttribute('data-value') : '';
-      distribute_lightline = b.querySelector('.distribute_lightline.active');
-      obj.distribute_lightline = distribute_lightline ? distribute_lightline.getAttribute('data-value') : '';
-      montage = b.querySelector('.montage.active');
-      obj.montage = montage ? montage.getAttribute('data-value') : '';
+      obj.room_name = getValueFromInputField(b.querySelector('[name$="[room_name]"]'));
+      obj.length = parseFloat(getValueFromInputField(b.querySelector('[name$="[length]"]')));
+      obj.identical_lengths_lightlines = parseFloat(b.querySelector('[name$="[identical_lengths_lightlines]"]')?.value || 0); // Optional value.
+      obj.module_length = getValueFromButton(b.querySelector('.module-length-group'));
+      obj.mount_height = getValueFromButton(b.querySelector('.mount-height-group'));
+      obj.color = getValueFromButton(b.querySelector('.thumb-row'));
+      obj.optic = getValueFromButton(b.querySelector('.optics'));
+      obj.dimmable = getValueFromButton(b.querySelector('.dimmable-group'));
+      obj.distribute_lightline = getValueFromButton(b.querySelector('.distribute-lightline-group'));
+      obj.montage = getValueFromButton(b.querySelector('.montage-group'));
       arr.push(obj);
+
+      if(!obj.room_name || !obj.length || !obj.identical_lengths_lightlines || !obj.module_length || !obj.mount_height || !obj.color || !obj.optic  || !obj.dimmable || !obj.distribute_lightline || !obj.montage){
+        b.querySelector('.status').innerHTML = '&#128992; Aanvullen';
+      } else {
+        b.querySelector('.status').innerHTML = '&#128994; Compleet';
+      }
     });
+
     return arr;
   }
 
@@ -51,32 +51,33 @@
     arr.forEach((c, i) => { 
       const li = document.createElement('li');
       li.className = 'summary-item py-2';
-      li.innerHTML = `<div class="bi-chevron-compact-down" href="#summary-data[${i}]" data-bs-toggle="collapse" role="button" aria-expanded="false" summary-block>
-                      <strong>${i+1}. ${c.room_name || 'Onbenoemd'}</strong></div>
-                      <div id="summary-data[${i}]" class="collapse"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 15 15"><path fill="currentColor" d="M14.6 4.01a.5.5 0 0 1 .4.49v6a.5.5 0 0 1-.5.5H.5a.5.5 0 0 1-.5-.5v-6l.01-.1A.5.5 0 0 1 .5 4h14zM1 10h13V5h-1.075v1.5a.425.425 0 1 1-.85 0V5h-1.15v1.5a.425.425 0 1 1-.85 0V5h-1.15v2.5a.425.425 0 1 1-.85 0V5h-1.15v1.5a.425.425 0 1 1-.85 0V5h-1.15v1.5a.425.425 0 1 1-.85 0V5h-1.15v2.5a.425.425 0 1 1-.85 0V5H1z"/></svg>
+      li.innerHTML = `<div class="bi-chevron-compact-right" href="#summary-data[${i}]" data-bs-toggle="collapse" role="button" aria-expanded="false" summary-block>
+                      ${(!c.room_name) ? '&#128992 ' : ''}<strong>${i+1}. ${c.room_name || 'Onbenoemd'}</strong></div>
+                      <div id="summary-data[${i}]" class="collapse">
+                      ${(!c.length) ? '&#128992 ' : ''}<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 15 15"><path fill="currentColor" d="M14.6 4.01a.5.5 0 0 1 .4.49v6a.5.5 0 0 1-.5.5H.5a.5.5 0 0 1-.5-.5v-6l.01-.1A.5.5 0 0 1 .5 4h14zM1 10h13V5h-1.075v1.5a.425.425 0 1 1-.85 0V5h-1.15v1.5a.425.425 0 1 1-.85 0V5h-1.15v2.5a.425.425 0 1 1-.85 0V5h-1.15v1.5a.425.425 0 1 1-.85 0V5h-1.15v1.5a.425.425 0 1 1-.85 0V5h-1.15v2.5a.425.425 0 1 1-.85 0V5H1z"/></svg>
                       Lengte lichtlijn <div class="small-muted">${(c.length||0)} m </div>
-                      <i>Aantal identieke lengtes lichtlijn</i> <div class="small-muted"> ${(c.identical_lengths_lightlines||0)} </div>
-                      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"><path fill="currentColor" d="M3 21V3h18v18zm2-2h14v-5H5zm0-7h14V5H5zm0 0V5z"/></svg>
+                      ${(!c.identical_lengths_lightlines) ? '&#128992 ' : ''}<i>Aantal identieke lengtes lichtlijn</i> <div class="small-muted"> ${(c.identical_lengths_lightlines||0)} </div>
+                      ${(!c.module_length) ? '&#128992 ' : ''}<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"><path fill="currentColor" d="M3 21V3h18v18zm2-2h14v-5H5zm0-7h14V5H5zm0 0V5z"/></svg>
                       Module lengte <div class="small-muted">${(c.module_length||0)} mm</div>
-                      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M16 7V2.6a.6.6 0 0 0-.6-.6H8.6a.6.6 0 0 0-.6.6v18.8a.6.6 0 0 0 .6.6h6.8a.6.6 0 0 0 .6-.6V17m0-10h-3m3 0v5m0 0h-3m3 0v5m0 0h-3"/></svg>
-                      Montagehoogte/Lumenpakket <div class="small-muted">${(c.mount_height||0)}</div>
-                      <i class="bi-sun"></i> Lichtkleur <div class="small-muted">${(c.color||0)}</div>
-                      <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" viewBox="0 0 48 48"><circle cx="25.193" cy="24" r="10.574" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/><circle cx="21.331" cy="12.115" r="8.613" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/><circle cx="35.303" cy="16.655" r="8.613" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/><circle cx="35.303" cy="31.345" r="8.613" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/><circle cx="21.331" cy="35.885" r="8.613" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/><circle cx="12.697" cy="24" r="8.613" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/></svg>
-                      Optiek <div class="small-muted">${c.optic || ''}</div>
-                      <i class="bi-sun"></i> Dimbaar <div class="small-muted">${(c.dimmable|| '<br>')}</div>
-                      <i class="bi bi-grid-3x3-gap"></i> Indeling lichtlijn <div class="small-muted">${(c.distribute_lightline||'<br>')}</div>
-                      <i class="bi bi-tools"></i> Montage <div class="small-muted">${(c.montage||'<br>')}</div></div>`;
+                      ${(!c.mount_height) ? '&#128992 ' : ''}<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M16 7V2.6a.6.6 0 0 0-.6-.6H8.6a.6.6 0 0 0-.6.6v18.8a.6.6 0 0 0 .6.6h6.8a.6.6 0 0 0 .6-.6V17m0-10h-3m3 0v5m0 0h-3m3 0v5m0 0h-3"/></svg>
+                      Montagehoogte / Lumenpakket <div class="small-muted">${(c.mount_height||0)}</div>
+                      ${(!c.color) ? '&#128992 ' : ''}<i class="bi-sun"></i> Lichtkleur <div class="small-muted">${(c.color||0)}</div>
+                      ${(!c.optic) ? '&#128992 ' : ''}<svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" viewBox="0 0 48 48"><circle cx="25.193" cy="24" r="10.574" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/><circle cx="21.331" cy="12.115" r="8.613" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/><circle cx="35.303" cy="16.655" r="8.613" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/><circle cx="35.303" cy="31.345" r="8.613" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/><circle cx="21.331" cy="35.885" r="8.613" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/><circle cx="12.697" cy="24" r="8.613" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/></svg>
+                      Optiek <div class="small-muted">${c.optic || '<br>'}</div>
+                      ${(!c.dimmable) ? '&#128992 ' : ''}<i class="bi-sun"></i> Dimbaar <div class="small-muted">${(c.dimmable||'<br>')}</div>
+                      ${(!c.distribute_lightline) ? '&#128992 ' : ''}<i class="bi bi-grid-3x3-gap"></i> Indeling lichtlijn <div class="small-muted">${(c.distribute_lightline||'<br>')}</div>
+                      ${(!c.montage) ? '&#128992 ' : ''}<i class="bi bi-tools"></i> Montage <div class="small-muted">${(c.montage||'<br>')}</div></div>`;
       summaryList.appendChild(li);
     });
 
     summaryList.querySelectorAll('[summary-block]').forEach(s => {
       s.addEventListener('click', () => {
         if(s.getAttribute("aria-expanded") == "true"){
-          s.classList.remove('bi-chevron-compact-down');
-          s.classList.add('bi-chevron-compact-right');
-        } else {
           s.classList.remove('bi-chevron-compact-right');
           s.classList.add('bi-chevron-compact-down');
+        } else {
+          s.classList.remove('bi-chevron-compact-down');
+          s.classList.add('bi-chevron-compact-right');
         }
       });
     });
@@ -190,11 +191,11 @@
     collapser.addEventListener('click', () => {
       const s = collapser.children[0];
       if(collapser.getAttribute("aria-expanded") == "true"){
-        s.classList.remove('bi-chevron-compact-down');
-        s.classList.add('bi-chevron-compact-right');
-      } else {
         s.classList.remove('bi-chevron-compact-right');
         s.classList.add('bi-chevron-compact-down');
+      } else {
+        s.classList.remove('bi-chevron-compact-down');
+        s.classList.add('bi-chevron-compact-right');
       }
     });
 
@@ -307,6 +308,34 @@
         updateSummary();
       });
     });
+  }
+
+  // Also sets an orange circle before the icon and title if it's empty.
+  function getValueFromInputField(element){
+    var toReturn = '';
+    if(element.value){
+      element.parentElement.firstChild.textContent = '';
+      toReturn = element.value;
+    } else if(!element.parentElement.firstChild.textContent) {
+      element.parentElement.prepend('\u{1F7E0}', '');
+    }
+    return toReturn;
+  }
+
+  // Also sets an orange circle before the icon and title if it's empty.
+  function getValueFromButton(element){
+    var toReturn = '';
+    console.log(element);
+    console.log(element.querySelector('.active'));
+    console.log(element.querySelector('.selected'));
+    const buttonSelected = element.querySelector('.active') ? element.querySelector('.active') : element.querySelector('.selected');
+    if(buttonSelected?.getAttribute('data-value')){
+      element.parentElement.firstChild.textContent = '';
+      toReturn = buttonSelected.getAttribute('data-value');
+    } else if(!element.parentElement.firstChild.textContent.trim()) {
+      element.parentElement.prepend('\u{1F7E0}', '');
+    }
+    return toReturn;
   }
 
   async function submitForm(payload){
